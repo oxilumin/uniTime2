@@ -100,9 +100,9 @@ public class StaticFeatures {
     {
 		String output = input+"_output";
 
-		long maxNumberOfIterations = 25000L;
+		long maxNumberOfIterations = 250000L;
 
-		return ExItcTest.goSolve("exam", input, output, 200L, maxNumberOfIterations);
+		return ExItcTest.goSolve("exam", input, output, 300L, maxNumberOfIterations);
     }
 
 	 public static void main(String[] args) throws Exception {

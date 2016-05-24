@@ -127,9 +127,9 @@ public class ExItcTest {
 
                 sSeed = Long.parseLong(System.getProperty("seed", String.valueOf(sSeed)));
                 sTimeOut = Long.parseLong(System.getProperty("timeout", String.valueOf(sTimeOut)));
-                if(ItcTest.class.getResource("/" + sProblem + ".properties") != null) {
+                if(ExItcTest.class.getResource("/ExamFeatureCalculation/" + sProblem + ".properties") != null) {
                     try {
-                        sConfig.load(ItcTest.class.getResourceAsStream("/" + sProblem + ".properties"));
+                        sConfig.load(ExItcTest.class.getResourceAsStream("/ExamFeatureCalculation/" + sProblem + ".properties"));
                     } catch (IOException var4) {
                         System.err.println("Unable to read property file, reason: " + var4.getMessage());
                         var4.printStackTrace(System.err);
@@ -158,7 +158,7 @@ public class ExItcTest {
                 sLogFile = new File(sOutputFile.getParentFile(), sOutputFile.getName().substring(0, sOutputFile.getName().lastIndexOf(46)) + ".log");
                 boolean var5 = "debug".equals(System.getProperty("verbose"));
                 boolean var3 = var5 || "info".equals(System.getProperty("verbose"));
-                setupLogging(sLogFile, true, var5);
+                setupLogging(sLogFile, var3, var5);
                 sCSVFile = new File(sOutputFile.getParentFile(), sInputFile.getName().substring(0, sInputFile.getName().lastIndexOf(46)) + ".csv");
                 ToolBox.setSeed(sSeed);
                 sConfig.setProperty("General.Seed", String.valueOf(sSeed));
