@@ -2,6 +2,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import AdaBoostRegressor
+from sklearn.tree import DecisionTreeRegressor
 from sklearn.cross_validation import cross_val_predict
 from sklearn.preprocessing import PolynomialFeatures
 
@@ -39,10 +40,10 @@ weights = results[:, 3]
 
 w = [t for t in results[:, 2] if t > 0]
 clf = GradientBoostingRegressor(learning_rate=0.08, n_estimators=20, max_depth=40, min_samples_leaf=20)
-clfR = GradientBoostingRegressor(learning_rate=0.08, n_estimators=120, max_depth=30, min_samples_leaf=20)
+clfR = GradientBoostingRegressor(learning_rate=0.08, n_estimators=120, max_depth=40, min_samples_leaf=20)
 clffit = clf.fit(features2, target)
-featuresSelectionModel = SelectFromModel(clffit, prefit=True)
-features3 = featuresSelectionModel.transform(features2)
+featuresSelectionModel = SelectFromModel(clffit)
+features3 = featuresSelectionModel.fit_transform(features2, target)
 
 features4 = []
 
@@ -58,10 +59,27 @@ for f in features3:
     features4.append(newFeatures)
 
 clffit2 = clf.fit(features4, target)
-featuresSelectionModel2 = SelectFromModel(clffit2, prefit=True)
-features5 = featuresSelectionModel.transform(features4)
+featuresSelectionModel2 = SelectFromModel(clffit2)
+features5 = featuresSelectionModel2.fit_transform(features4, target)
 
-scores = cross_val_predict(clfR, features5, target, cv=10)
+features6 = []
+
+for f in features5:
+    newFeatures = []
+    for i in range(len(f)):
+        for j in range(i, len(f)):
+            newFeatures.append(f[i] * f[j])
+            newFeatures.append((f[i] + 0.333) / (f[j] + 0.333))
+            newFeatures.append(f[i] - f[j])
+            newFeatures.append(f[i] + f[j])
+            newFeatures.append(f[i])
+    features6.append(newFeatures)
+
+clffit3 = clf.fit(features6, target)
+featuresSelectionModel3 = SelectFromModel(clffit3)
+features7 = featuresSelectionModel3.fit_transform(features6, target)
+
+scores = cross_val_predict(clfR, features7, target, cv=20)
 v = np.column_stack((target, scores))
 vs = v[v[:, 1].argsort()]
 tt = [t for t in vs[:, 0] if t > 0]
